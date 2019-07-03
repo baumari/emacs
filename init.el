@@ -146,6 +146,12 @@
              (define-key reftex-mode-map (concat YaTeX-prefix ">") 'YaTeX-comment-region)
              (define-key reftex-mode-map (concat YaTeX-prefix "<") 'YaTeX-uncomment-region)))
 
+;;color settings
+(progn
+  (set-face-background 'mode-line "LightSkyBlue")
+  (set-face-background 'mode-line-inactive "LightSteelBlue")
+  )
+
 
 
 
