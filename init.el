@@ -10,7 +10,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flyspell-correct multi-term hlinum nlinum flycheck yatex))))
+    (flycheck-irony flyspell-correct multi-term hlinum nlinum flycheck yatex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -152,6 +152,11 @@
   (set-face-background 'mode-line-inactive "LightSteelBlue")
   )
 
+;; flycheck-irony
+(eval-after-load "flycheck"
+  '(progn
+     (when (locate-library "flycheck-irony")
+       (flycheck-irony-setup))))
 
 
 
