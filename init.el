@@ -10,44 +10,60 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck-irony flyspell-correct multi-term hlinum nlinum flycheck yatex))))
+    (flymake-cursor flymake pacmacs mew xclip flycheck-irony flyspell-correct multi-term hlinum nlinum flycheck yatex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "white" :foreground "black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))
+ '(default ((t (:inherit nil :stipple nil :background "color-235" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))
  '(linum-highlight-face ((t (:foreground "black" :background "yellow")))))
 (setq make-backup-files nil)
 (setq auto-save-default nil)
+
 ;; flymake
-(require 'flymake)
-(defun flymake-get-make-cmdline (source base-dir)
-  (list "make"
-	(list "-s" "-C"
-	      base-dir
-	      (concat "CHK_SOURCES=" source)
-	      "SYNTAX_CHECK_MODE=1")))
+;;(require 'flymake)
+;;(custom-set-faces
+;;  '(flymake-errline ((((class color)) (:background "red"))))
+;;  '(flymake-warnline ((((class color)) (:background "red")))))
+;;(push '("\\.h\\'" flymake-simple-make-init flymake-master-cleanup)
+;;      flymake-allowed-file-name-masks)
+;;(add-hook 'c++-mode-hook
+;;          '(lambda()
+;;             (flymake-mode t)
+;;             (flymake-cursor-mode t)
+;;             (setq flymake-check-was-interrupted t)
+;;             (local-set-key "\C-c\C-v" 'flymake-start-syntax-check)
+;;             (local-set-key "\C-c\C-p" 'flymake-goto-prev-error)
+;;             (local-set-key "\C-c\C-n" 'flymake-goto-next-error)
+;;          )
+;;	  )
+;;(defun flymake-show-help ()
+;;  (when (get-char-property (point) 'flymake-overlay)
+;;    (let ((help (get-char-property (point) 'help-echo)))
+;;      (if help (message "%s" help)))))
+;;(add-hook 'post-command-hook 'flymake-show-help)
+
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
-(require 'flycheck)
-(flycheck-define-checker c/c++
-  "A C/C++ checker using g++."
-  :command ("g++" "-Wall" "-Wextra" source)
-  :error-patterns  ((error line-start
-                           (file-name) ":" line ":" column ":" " error: " (message)
-                           line-end)
-                    (warning line-start
-                           (file-name) ":" line ":" column ":" " warning: " (message)
-                           line-end))
-  :modes (c-mode c++-mode))
-(global-flycheck-mode)
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-(flycheck-mode t)
+;;(require 'flycheck)
+;;(flycheck-define-checker c/c++
+;;  "A C/C++ checker using g++."
+;;  :command ("g++" "-Wall" "-Wextra" source)
+;;  :error-patterns  ((error line-start
+;;                           (file-name) ":" line ":" column ":" " error: " (message)
+;;                           line-end)
+;;                    (warning line-start
+;;                           (file-name) ":" line ":" column ":" " warning: " (message)
+;;                           line-end))
+;;  :modes (c-mode c++-mode))
+;;(global-flycheck-mode)
+;;(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+;;(flycheck-mode t)
 
 ;;;(require 'linum)
 (require 'hlinum)
@@ -61,6 +77,12 @@
 (global-set-key (kbd "<C-down>")  'windmove-down)
 (global-set-key (kbd "<C-up>")    'windmove-up)
 (global-set-key (kbd "<C-right>") 'windmove-right)
+
+;; resize window buffer
+(global-set-key (kbd "C-x <C-right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-x <C-left>")  'shrink-window-horizontally)
+(global-set-key (kbd "C-x <C-up>")    'enlarge-window)
+(global-set-key (kbd "C-x <C-down>")  'shrink-window)
 
 (require 'multi-term)
 (setq  multi-term-program shell-file-name)
@@ -81,7 +103,7 @@
  (lambda (hook)
    (add-hook hook 'flyspell-prog-mode))
  '(
-   c-mode-common-hook                 ;; ここに書いたモードではコメント領域のところだけ
+   ;; ここに書いたモードではコメント領域のところだけ
    emacs-lisp-mode-hook                 ;; flyspell-mode が有効になる
    ))
 (mapc
@@ -98,6 +120,22 @@
                       '(lambda () (flyspell-mode 1))))
    '(
      text-mode-hook     ;; ここに書いたモードでは
+                                    ;; flyspell-mode が有効になる
+     ))
+(mapc
+   (lambda (hook)
+     (add-hook hook
+                      '(lambda () (flyspell-mode 0))))
+   '(
+     c-mode-hook     ;; ここに書いたモードでは
+                                    ;; flyspell-mode が有効になる
+     ))
+(mapc
+   (lambda (hook)
+     (add-hook hook
+                      '(lambda () (flyspell-mode 0))))
+   '(
+     c++-mode-hook     ;; ここに書いたモードでは
                                     ;; flyspell-mode が有効になる
      ))
 
@@ -157,6 +195,27 @@
   '(progn
      (when (locate-library "flycheck-irony")
        (flycheck-irony-setup))))
+
+(setq x-select-enable-clipboard t)
+
+;; MEW
+(autoload 'mew "mew" nil t)
+(autoload 'mew-send "mew" nil t)
+(setq mew-name "Inaba Kento") ;; (user-full-name)
+(setq mew-user "kento") ;; (user-login-name)
+(setq mew-mail-domain "nh.scphys.kyoto-u.ac.jp")
+(setq mew-proto "%")
+(setq mew-imap-user "a0123502@st.kyoto-u.ac.jp");; (user-login-name)
+(setq mew-imap-server "outlook.office365.com") ;; if not localhost
+(setq mew-imap-auth t)
+(setq mew-smtp-user "a0123502@st.kyoto-u.ac.jp")
+(setq mew-smtp-server "smtp-auth.kuins.kyoto-u.ac.jp") ;; if not localhost
+(setq mew-smtp-auth t)
+
+(setq window-system nil)
+(setq display-graphic-p nil)
+
+
 
 
 
