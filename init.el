@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -16,8 +15,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "black" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))
+
+ '(default ((t (:inherit nil :stipple nil :background "#000000" :foreground "#ffffff"))))
  '(linum-highlight-face ((t (:foreground "black" :background "yellow")))))
+(set-face-background 'region "color-179")
+(set-face-foreground 'font-lock-comment-face "brightred")
+(set-face-foreground 'font-lock-string-face "brightmagenta")
+(set-face-foreground 'font-lock-constant-face "color-208")
+(set-face-foreground 'font-lock-type-face "green")
+(set-face-foreground 'font-lock-keyword-face "color-177")
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
@@ -47,7 +53,7 @@
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
 ;;(require 'flycheck)
